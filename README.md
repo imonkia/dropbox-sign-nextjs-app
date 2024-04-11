@@ -17,7 +17,7 @@ npm install
 
 ### Set up environmental variables:
 
-Create a new file named `.env` in the root of the project and add your Dropbox Sign `API_KEY` and `CLIENT_ID`.
+Create a new file named `.env.local` in the root of the project and add your Dropbox Sign `API_KEY` and `CLIENT_ID`.
 
 ### Start the App:
 
