@@ -12,13 +12,15 @@ const AccountDetails = () => {
 	const [ clearButton, setClearButton ] = useState<boolean>(false);
 	const [ accountInfo, setAccountInfo ] = useState<AccountInfo | null>(null);
 			
-	const handleClick: any = async () => {
+	// Sending the request to the Dropbox Sign API using the Node SDK
+	const handleClick = async () => {
 		const acctData: AccountInfo = await getAccount().then(res => res);
 		setAccountInfo(acctData);
 		setClearButton(true);
 	};
 
-	const clearData: any = async () => {
+	// Updating state variables
+	const clearData = async () => {
 		setAccountInfo(null);
 		setClearButton(false);
 	};

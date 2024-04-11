@@ -4,6 +4,7 @@ import { createEmbeddedSignatureRequest } from '@/lib/signature_request';
 import { useState, useEffect, ChangeEvent, MouseEvent } from 'react';
 import HelloSign from 'hellosign-embedded';
 
+// Env variables prefaced with "Next_PUBLIC_" are meant for client components
 const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
 
 const EmbeddedSignatureRequest = () => {
@@ -16,6 +17,8 @@ const EmbeddedSignatureRequest = () => {
 	const [ errorMessage, setErrorMessage ] = useState<string>('');
 
 	useEffect(() => {
+		// Checking that signerName is not empty and loose validation of signerEmail containing valid e-mail characters
+		// This will disable or enable the "Create Signature Request" button based on the checks
 		if(signerName && signerEmail && /.+@.+\..+/.test(signerEmail)) {
 			setCreateSignButton(false);
 		} else {
@@ -23,24 +26,32 @@ const EmbeddedSignatureRequest = () => {
 		};
 	}, [signerName, signerEmail]);
 	
+	// Grabbing values from text inputs to save on corresponding variables based on the inputs' names
 	const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
 		e.target.name === "signerName" && setSignerName(e.target.value);
 		e.target.name === "signerEmailAddress" && setSignerEmail(e.target.value);
 	};
 	
+	// Sending the request to the Dropbox Sign API using the Node SDK
 	const sendSignatureRequest = async (e: MouseEvent<HTMLElement>) => {	
 		e.preventDefault();
+		// Boolean to update the text on the "Create Signature Request" button
 		setIsWaiting(true);
 		const response: any = await createEmbeddedSignatureRequest(signerName, signerEmail).then(res => res);
+		// If the call was successful, i.e. there is a sign URL, update UI (buttons, text inputs, etc.)
 		if(response.signUrl) { 
 			setSignUrl(response.signUrl);
 			setIsWaiting(false);
 			setSignButton(true);
+			// Disable the create sign button by changing the button's disabled state
 			setCreateSignButton(true);
+			// Clear text input fields
 			setSignerEmail('');
 			setSignerName('');
-			setErrorMessage('');
+			// Only update the variable if there is already an existing error message
+			setErrorMessage(errorMessage && '');
 		} else {
+			// Handling error from the API. This error will display in the UI for the user.
 			setErrorMessage(response.errorMsg);
 			setIsWaiting(false);
 		};
@@ -48,7 +59,11 @@ const EmbeddedSignatureRequest = () => {
 
 	const signDocument = async (e: MouseEvent<HTMLElement>) => {
 		e.preventDefault();
+		
+		// Initializing client-side library
 		const client = new HelloSign();
+		
+		// Launch iFrame to begin signing process
 		client.open(signUrl, {
 			skipDomainVerification: true,
 			testMode: true,
@@ -57,6 +72,7 @@ const EmbeddedSignatureRequest = () => {
 			debug: true
 		});
 
+		// Some signing events to listen to to update state variables
 		client.on('ready', data => setSignButton(false));
 		client.on('close', () => {
 			console.log('iFrame closed.\n');

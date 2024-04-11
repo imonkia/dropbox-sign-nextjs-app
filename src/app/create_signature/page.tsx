@@ -1,8 +1,8 @@
-// Initialization of HelloSign client during SSR throws "window not defined" exception
+import dynamic from "next/dynamic";
+
+// Initialization of HelloSign client during SSR (npm run dev, npm run compile) throws "window not defined" exception
 // even on 'use client' components.
 // Must completely "turn off" SSR in order to prevent exception.
-
-import dynamic from "next/dynamic";
 
 const EmmbeddedRequest = dynamic(() => import('./embedded_request'), {
 	ssr: false,
