@@ -1,5 +1,11 @@
 # Dropbox Sign Next.js App
-Next.js working example using the [@dropbox/sign](https://github.com/hellosign/dropbox-sign-node) Node SDK.
+The current [@dropbox/sign](https://github.com/hellosign/dropbox-sign-node) Node SDK uses node modules which cannot run on client components.
+
+Due to the nature of Next.js, this can cause errors during compile time.
+
+This is a Next.js basic working example using the [@dropbox/sign](https://github.com/hellosign/dropbox-sign-node) Node SDK, as well as the [hellosign-embedded](https://github.com/hellosign/hellosign-embedded) client-side library.
+
+This example app relies on the use of `'use server'` directive to be able to perform [Server Actions and Mutations](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations) from client components.
 
 ## How to use
 
