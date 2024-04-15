@@ -14,6 +14,8 @@ export const getAccount = async () => {
 		};
 	}
 	catch (err) {
-		return err.body.error.errorMsg;
+		return {
+			errorMsg: err.body.error.errorMsg
+		};
 	};
 };

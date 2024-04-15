@@ -37,10 +37,14 @@ export const createEmbeddedSignatureRequest = async (signerName, signerEmail) =>
 		
 		const embeddedResult = await embeddedApi.embeddedSignUrl(signatureId);
 		const signUrl = embeddedResult.body.embedded.signUrl;
-		return {signUrl: signUrl};
+		return {
+			signUrl: signUrl
+		};
 		
 	}
 	catch(err) {
-		return {errorMsg: err.body.error.errorMsg};
+		return {
+			errorMsg: err.body.error.errorMsg
+		};
 	};
 }
