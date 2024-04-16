@@ -4,7 +4,7 @@ import { createEmbeddedSignatureRequest } from '@/lib/signature_request';
 import { useState, useEffect, ChangeEvent, MouseEvent } from 'react';
 import HelloSign from 'hellosign-embedded';
 
-// Env variables prefaced with "Next_PUBLIC_" are meant for client components
+// Env variables prefaced with "NEXT_PUBLIC_" are meant for client components
 const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
 
 const EmbeddedSignatureRequest = () => {
@@ -17,7 +17,7 @@ const EmbeddedSignatureRequest = () => {
 	const [ errorMessage, setErrorMessage ] = useState<string>('');
 
 	useEffect(() => {
-		// Checking that signerName is not empty and loose validation of signerEmail containing valid e-mail characters
+		// Checking that signerName is not empty + loose validation of signerEmail containing valid e-mail characters
 		// This will disable or enable the "Create Signature Request" button based on the checks
 		if(signerName && signerEmail && /.+@.+\..+/.test(signerEmail)) {
 			setCreateSignButton(false);
@@ -42,6 +42,7 @@ const EmbeddedSignatureRequest = () => {
 		if(response.signUrl) { 
 			setSignUrl(response.signUrl);
 			setIsWaiting(false);
+			// Enable the sign button by changing the button's disabled state
 			setSignButton(true);
 			// Disable the create sign button by changing the button's disabled state
 			setCreateSignButton(true);
@@ -97,12 +98,16 @@ const EmbeddedSignatureRequest = () => {
 						<label htmlFor="email" className="text-sm text-neutral-600">Enter the Signer&apos;s Email:</label>
 						<input value={signerEmail} className="rounded-md w-full p-2 h-10" type="text" name="signerEmailAddress" onChange={e => handleOnChange(e)} required/><br/>
 						<div className="mt-10">
-							<button className={`bg-neutral-700 text-sm w-auto p-2 rounded-lg mr-5 ${createSignButton ? 'text-neutral-100 opacity-25' : ' text-white'}`} onClick={sendSignatureRequest} disabled={createSignButton}>{isWaiting ? "Waiting..." : "Create Signature Request"}</button>
-							{signButton ? 
-								<button className="bg-neutral-700 w-auto text-sm text-white p-2 rounded-lg" onClick={signDocument}>Document Ready to Sign!</button>
-								:
-								<button className="bg-neutral-700 text-sm text-neutral-100 opacity-25 p-2 rounded-lg" disabled>No Document Available</button>
-							}
+							<button className={`bg-neutral-700 text-sm w-auto p-2 rounded-lg mr-5 ${createSignButton ? 'text-neutral-100 opacity-25' : ' text-white'}`}
+								onClick={sendSignatureRequest}
+								disabled={createSignButton}>
+									{isWaiting ? "Waiting..." : "Create Signature Request"}
+							</button>
+							<button className={`bg-neutral-700 text-sm p-2 rounded-lg ${signButton ? 'text-white w-auto' : 'text-neutral-100 opacity-25'}`}
+								disabled={!signButton}
+								onClick={signDocument}>
+									{signButton ? 'Document Ready to Sign!' : 'No Document Available'}
+								</button>
 						</div>	
 					</form>
 					{errorMessage && 
