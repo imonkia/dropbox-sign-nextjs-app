@@ -11,7 +11,7 @@
   "dependencies": {
     "@dropbox/sign": "^1.4.0",
     "hellosign-embedded": "^2.12.0",
-    "next": ">=14.2.10",
+    "next": ">=15.5.14",
     "react": "^18",
     "react-dom": "^18"
   },
